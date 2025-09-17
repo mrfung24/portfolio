@@ -473,4 +473,63 @@
       const chatbotWindow = document.getElementById('chatbotWindow');
       const chatbotClose = document.getElementById('chatbotClose');
       const chatbotForm = document.getElementById('chatbotForm');
-      const chatbotInput =
+      const chatbotInput = document.getElementById('chatbotInput');
+      const chatbotMessages = document.getElementById('chatbotMessages');
+
+      chatbotToggle.addEventListener('click', () => {
+        chatbotWindow.classList.toggle('d-none');
+        if (!chatbotWindow.classList.contains('d-none')) {
+          chatbotInput.focus();
+        }
+      });
+
+      chatbotClose.addEventListener('click', () => {
+        chatbotWindow.classList.add('d-none');
+      });
+
+      function botReply(message) {
+        message = message.toLowerCase();
+
+        if (message.includes('hello') || message.includes('hi')) {
+          return "Hello! How can I help you today?";
+        }
+        if (message.includes('project')) {
+          return "You can check out my projects in the Projects section.";
+        }
+        if (message.includes('skills')) {
+          return "I have skills in HTML, CSS, JavaScript, and React.";
+        }
+        if (message.includes('contact')) {
+          return "Feel free to use the contact form below to reach me!";
+        }
+        if (message.includes('thank')) {
+          return "You're welcome! Let me know if you have any other questions.";
+        }
+        return "Sorry, I didn't understand that. Could you please rephrase?";
+      }
+
+      function addMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('chatbot-message', sender);
+        msgDiv.textContent = text;
+        chatbotMessages.appendChild(msgDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      }
+
+      chatbotForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const userMessage = chatbotInput.value.trim();
+        if (!userMessage) return;
+
+        addMessage(userMessage, 'user');
+        chatbotInput.value = '';
+
+        setTimeout(() => {
+          const reply = botReply(userMessage);
+          addMessage(reply, 'bot');
+        }, 600);
+      });
+    })();
+  </script>
+</body>
+</html>
