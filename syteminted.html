@@ -43,9 +43,121 @@
       padding: 20px 0;
       text-align: center;
     }
+
+    #chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-family: Arial, sans-serif;
+      z-index: 1050;
+    }
+
+    #chatbotToggle {
+      background-color: #0d6efd;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    #chatbotWindow {
+      width: 300px;
+      max-height: 400px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    #chatbotWindow.d-none {
+      display: none !important;
+    }
+
+    #chatbotHeader {
+      background-color: #0d6efd;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #chatbotHeader button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    #chatbotMessages {
+      flex-grow: 1;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+      background: #f8f9fa;
+    }
+
+    .chatbot-message {
+      margin-bottom: 10px;
+      clear: both;
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 15px;
+      line-height: 1.3;
+      word-wrap: break-word;
+    }
+
+    .chatbot-message.user {
+      background-color: #0d6efd;
+      color: white;
+      float: right;
+      border-bottom-right-radius: 0;
+    }
+
+    .chatbot-message.bot {
+      background-color: #e9ecef;
+      color: #212529;
+      float: left;
+      border-bottom-left-radius: 0;
+    }
+
+    #chatbotForm {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    #chatbotInput {
+      flex-grow: 1;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    #chatbotInput:focus {
+      outline: none;
+    }
+
+    #chatbotForm button {
+      background-color: #0d6efd;
+      border: none;
+      color: white;
+      padding: 0 15px;
+      cursor: pointer;
+      font-size: 14px;
+    }
   </style>
 </head>
-
+<body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="#">MyPortfolio</a>
@@ -82,7 +194,6 @@
     </div>
   </nav>
 
- 
   <section id="hero" class="hero">
     <div class="container hero-content">
       <h1 class="display-4 fw-bold">Hi, Jeffry Fung</h1>
@@ -90,7 +201,6 @@
       <a href="#projects" class="btn btn-primary btn-lg mt-3">View My Work</a>
     </div>
   </section>
-
 
   <section id="about" class="py-5">
     <div class="container">
@@ -120,7 +230,6 @@
       </div>
     </div>
   </section>
-
 
   <section id="skills" class="bg-light py-5">
     <div class="container">
@@ -200,6 +309,7 @@
               src="https://via.placeholder.com/400x200?text=Project+1"
               class="card-img-top"
               alt="Project 1"
+              loading="lazy"
             />
             <div class="card-body">
               <h5 class="card-title">Project One</h5>
@@ -216,6 +326,7 @@
               src="https://via.placeholder.com/400x200?text=Project+2"
               class="card-img-top"
               alt="Project 2"
+              loading="lazy"
             />
             <div class="card-body">
               <h5 class="card-title">Project Two</h5>
@@ -232,6 +343,7 @@
               src="https://via.placeholder.com/400x200?text=Project+3"
               class="card-img-top"
               alt="Project 3"
+              loading="lazy"
             />
             <div class="card-body">
               <h5 class="card-title">Project Three</h5>
@@ -246,7 +358,6 @@
     </div>
   </section>
 
-  <!-- Contact Section -->
   <section id="contact" class="bg-light py-5">
     <div class="container">
       <h2 class="mb-4 text-center">Contact Me</h2>
@@ -272,6 +383,7 @@
                 id="email"
                 required
                 placeholder="name@example.com"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
               />
               <div class="invalid-feedback">Please enter a valid email.</div>
             </div>
@@ -294,7 +406,6 @@
     </div>
   </section>
 
-
   <footer>
     <div class="container">
       <p>© 2025 Jeffry Fung. All rights reserved.</p>
@@ -306,9 +417,24 @@
     </div>
   </footer>
 
+  <div id="chatbot">
+    <button id="chatbotToggle" aria-label="Open chat" title="Chat with me!">
+      💬
+    </button>
+    <div id="chatbotWindow" class="d-none" role="dialog" aria-modal="true" aria-labelledby="chatbotHeaderTitle">
+      <div id="chatbotHeader">
+        <span id="chatbotHeaderTitle">Chat with Jeffry Fung</span>
+        <button id="chatbotClose" aria-label="Close chat">&times;</button>
+      </div>
+      <div id="chatbotMessages" aria-live="polite" aria-relevant="additions"></div>
+      <form id="chatbotForm" autocomplete="off">
+        <input type="text" id="chatbotInput" placeholder="Type your message..." required aria-label="Chat message input" />
+        <button type="submit" aria-label="Send message">Send</button>
+      </form>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 
   <script>
     (() => {
@@ -326,15 +452,25 @@
           return;
         }
 
-
         alertBox.classList.remove('d-none', 'alert-danger');
         alertBox.classList.add('alert-success');
         alertBox.textContent = 'Thank you for your message! I will get back to you soon.';
 
         form.reset();
         form.classList.remove('was-validated');
+
+        setTimeout(() => {
+          alertBox.classList.add('d-none');
+          alertBox.textContent = '';
+        }, 5000);
       });
     })();
   </script>
-</body>
-</html>
+
+  <script>
+    (() => {
+      const chatbotToggle = document.getElementById('chatbotToggle');
+      const chatbotWindow = document.getElementById('chatbotWindow');
+      const chatbotClose = document.getElementById('chatbotClose');
+      const chatbotForm = document.getElementById('chatbotForm');
+      const chatbotInput =
